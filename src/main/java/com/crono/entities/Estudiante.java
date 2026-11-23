@@ -68,21 +68,18 @@ public class Estudiante {
     @Column(name = "persona_no_preferida_id", length = 50)
     private Set<String> noPreferidos = new LinkedHashSet<>();
 
-    /** CORRECCIÓN: lo pide la regla "Días no disponibles" y no estaba en la BD. */
     @ElementCollection
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "estudiante_dias_no_disponibles", joinColumns = @JoinColumn(name = "estudiante_id"))
     @Column(name = "dia", length = 20)
     private Set<Dia> diasNoDisponibles = new LinkedHashSet<>();
 
-    /** Materias que el estudiante solicita cursar. */
     @ManyToMany
     @JoinTable(name = "estudiante_materias_solicitadas",
             joinColumns = @JoinColumn(name = "estudiante_id"),
             inverseJoinColumns = @JoinColumn(name = "materia_codigo"))
     private Set<Materia> materiasSolicitadas = new LinkedHashSet<>();
 
-    /** Clases en las que quedó inscrito (resultado del algoritmo). */
     @ManyToMany
     @JoinTable(name = "estudiante_inscripciones",
             joinColumns = @JoinColumn(name = "estudiante_id"),

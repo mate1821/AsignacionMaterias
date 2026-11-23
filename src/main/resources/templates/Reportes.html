@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportes · CRO-NO</title>
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+
+<body>
+    <nav class="nav">
+        <a class="marca" th:href="@{/}">CRO-NO</a>
+        <a th:href="@{/}">Datos</a>
+        <a th:href="@{/estudiantes}">Estudiantes</a>
+        <a th:href="@{/profesores}">Profesores</a>
+        <a th:href="@{/materias}">Materias</a>
+        <a th:href="@{/clases}">Clases</a>
+        <a th:href="@{/asignacion}">Asignación</a>
+        <a th:href="@{/horario}">Horario</a>
+        <a th:href="@{/reportes}" class="activo">Reportes</a>
+    </nav>
+
+    <h1>Reportes</h1>
+    <p class="subtitulo">Resultado de la asignación y notificaciones por estudiante.</p>
+
+    <div class="alerta ok" th:if="${mensaje}" th:text="${mensaje}"></div>
+    <div class="alerta error" th:if="${error}" th:text="${error}"></div>
+
+    <section class="tarjeta">
+        <h2>Archivo general</h2>
+        <p class="subtitulo">Asignaciones y notificaciones de todos los estudiantes en formato JSON.</p>
+        <a class="boton" th:href="@{/reportes/descargar}">Descargar Archivo General JSON</a>
+    </section>
+
+    <section class="tarjeta">
+        <h2>Notificaciones por estudiante</h2>
+
+        <form class="selector" th:action="@{/reportes}" method="get">
+            <div>
+                <label for="estudianteId">Estudiante</label>
+                <select id="estudianteId" name="estudianteId" onchange="this.form.submit()">
+                    <option th:each="e : ${estudiantes}" th:value="${e.id}" th:text="${e.id + ' · ' + e.nombre}"
+                        th:selected="${e.id == estudianteId}">E1001 · Nombre</option>
+                </select>
+            </div>
+            <noscript><button type="submit" class="boton">Ver</button></noscript>
+        </form>
+
+        <div class="tabla-contenedor" th:if="${notificaciones != null}">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Estado</th>
+                        <th>Materia</th>
+                        <th>Motivo</th>
+                        <th>Sugerencia</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="n : ${notificaciones}">
+                        <td><span class="estado" th:classappend="${#strings.toLowerCase(n.estado.name())}"
+                                th:text="${n.estado.nombre}">Inscrito</span></td>
+                        <td th:text="${n.materia != null} ? ${n.materia.codigo + ' · ' + n.materia.nombre} : '—'">301 ·
+                            Cálculo</td>
+                        <td th:text="${n.motivo}">Motivo</td>
+                        <td th:text="${n.sugerencia} ?: '—'">Sugerencia</td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(notificaciones)}">
+                        <td colspan="4" class="vacio">Sin notificaciones. ¿Ya ejecutó la asignación?</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p class="vacio" th:if="${#lists.isEmpty(estudiantes)}">No hay estudiantes cargados.</p>
+    </section>
+</body>
+
+</html>

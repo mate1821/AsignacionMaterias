@@ -27,19 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Lee el JSON de entrada y lo guarda en la base de datos.
- *
- * Sin clases DTO: Jackson convierte el JSON en Map / List / String / Number
- *   { "profesores": [ {...}, {...} ] }  ->  Map con la llave "profesores" -> List de Map
- * y aquí se pasa cada Map a su entidad.
- *
- * Reemplaza profesores, materias, clases y estudiantes (con sus inscripciones y notificaciones).
- * Universidad, edificios y salones NO se tocan: vienen del DataLoader.
- * Todo ocurre en una sola transacción: si algo del JSON está mal, no se guarda nada.
- *
- * Nota: Spring Boot 4 usa Jackson 3, por eso ObjectMapper viene del paquete tools.jackson.
- */
+
 @Service
 public class CargaJsonService {
 

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horario · CRO-NO</title>
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+
+<body>
+    <nav class="nav">
+        <a class="marca" th:href="@{/}">CRO-NO</a>
+        <a th:href="@{/}">Datos</a>
+        <a th:href="@{/estudiantes}">Estudiantes</a>
+        <a th:href="@{/profesores}">Profesores</a>
+        <a th:href="@{/materias}">Materias</a>
+        <a th:href="@{/clases}">Clases</a>
+        <a th:href="@{/asignacion}">Asignación</a>
+        <a th:href="@{/horario}" class="activo">Horario</a>
+        <a th:href="@{/reportes}">Reportes</a>
+    </nav>
+
+    <h1>Horario</h1>
+    <p class="subtitulo">Clases en las que quedó inscrito cada estudiante.</p>
+
+    <div class="alerta ok" th:if="${mensaje}" th:text="${mensaje}"></div>
+    <div class="alerta error" th:if="${error}" th:text="${error}"></div>
+
+    <form class="selector" th:action="@{/horario}" method="get">
+        <div>
+            <label for="estudianteId">Estudiante</label>
+            <select id="estudianteId" name="estudianteId" onchange="this.form.submit()">
+                <option th:each="e : ${estudiantes}" th:value="${e.id}" th:text="${e.id + ' · ' + e.nombre}"
+                    th:selected="${e.id == estudianteId}">E1001 · Nombre</option>
+            </select>
+        </div>
+        <noscript><button type="submit" class="boton">Ver</button></noscript>
+    </form>
+
+    <th:block th:if="${clases != null}">
+        <section class="tarjeta tabla-contenedor">
+            <table class="semana">
+                <thead>
+                    <tr>
+                        <th>Hora</th>
+                        <th th:each="d : ${ {'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'} }" th:text="${d}">
+                            Lunes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="h : ${ {'06:00', '08:00', '10:00', '12:00', '14:00', '16:00'} }">
+                        <td th:text="${h}">06:00</td>
+                        <td th:each="d : ${ {'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'} }">
+                            <div class="bloque" th:each="c : ${clases}"
+                                th:if="${c.dia.nombre == d and c.horaInicio.toString() == h}">
+                                <strong th:text="${c.materia.nombre}">Materia</strong>
+                                <div th:text="${c.profesor.nombre}">Profesor</div>
+                                <div th:text="${'Edificio ' + c.salon.edificio.nombre + ' - S' + c.salon.id}">Edificio -
+                                    S101</div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="tarjeta tabla-contenedor">
+            <h2>Detalle</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Clase</th>
+                        <th>Materia</th>
+                        <th>Créditos</th>
+                        <th>Profesor</th>
+                        <th>Horario</th>
+                        <th>Ubicación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="c : ${clases}">
+                        <td th:text="${c.id}">501</td>
+                        <td th:text="${c.materia.nombre}">Materia</td>
+                        <td th:text="${c.materia.creditos}">3</td>
+                        <td th:text="${c.profesor.nombre}">Profesor</td>
+                        <td th:text="${c.horarioTexto}">Lunes 06:00 - 08:00</td>
+                        <td th:text="${'Edificio ' + c.salon.edificio.nombre + ' - S' + c.salon.id}">Edificio - S101
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(clases)}">
+                        <td colspan="6" class="vacio">Este estudiante no tiene clases inscritas. ¿Ya ejecutó la
+                            asignación?</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </th:block>
+
+    <p class="vacio" th:if="${#lists.isEmpty(estudiantes)}">No hay estudiantes cargados.</p>
+</body>
+
+</html>

@@ -33,15 +33,12 @@ public class AsignacionService {
     private final MateriaRepository materiaRepository;
     private final ClaseRepository claseRepository;
 
-    public AsignacionService(EstudianteRepository estudianteRepository, MateriaRepository materiaRepository,
-                             ClaseRepository claseRepository) {
+    public AsignacionService(EstudianteRepository estudianteRepository, MateriaRepository materiaRepository,ClaseRepository claseRepository) {
         this.estudianteRepository = estudianteRepository;
         this.materiaRepository = materiaRepository;
         this.claseRepository = claseRepository;
     }
 
-    /** Devuelve un resumen para mostrar en pantalla. */
-    @Transactional
     public String ejecutar() {
         List<Estudiante> estudiantes = estudianteRepository.findAll(Sort.by("id"));
         List<Materia> materias = materiaRepository.findAll(Sort.by("codigo"));
@@ -92,27 +89,17 @@ public class AsignacionService {
      */
     private void asignar(List<Estudiante> estudiantes, List<Materia> materias, List<Clase> clases) {
 
-        // TODO: implementar el algoritmo de asignación aquí.
-
-        // Mientras tanto solo se deja un aviso por estudiante, para poder probar el flujo completo
-        // (botón -> servicio -> base de datos -> Reportes / JSON de salida).
         for (Estudiante estudiante : estudiantes) {
             estudiante.agregarNotificacion(new Notificacion(null, EstadoNotificacion.INFO,
                     "El algoritmo de asignación aún no está implementado.", null));
         }
     }
 
-    // ------------------------------------------------------------------ ayudas para el algoritmo
 
-    /** Cupos que le quedan a la clase (cuenta a los inscritos con estudiante.inscribir en esta ejecución). */
     private int cuposRestantes(Clase clase) {
         return clase.getCupos() - clase.getEstudiantesInscritos().size();
     }
 
-    /**
-     * Minutos caminando entre el edificio de una clase y el de otra.
-     * 0 si es el mismo edificio; Integer.MAX_VALUE si no hay tiempo registrado entre esos edificios.
-     */
     private int minutosEntre(Clase origen, Clase destino) {
         Edificio edificioOrigen = origen.getSalon().getEdificio();
         Edificio edificioDestino = destino.getSalon().getEdificio();
@@ -126,14 +113,13 @@ public class AsignacionService {
         return minutos != null ? minutos : Integer.MAX_VALUE;
     }
 
-    /** Borra inscripciones y notificaciones de la ejecución anterior. */
     private void limpiarAsignacionAnterior(List<Estudiante> estudiantes, List<Clase> clases) {
         for (Estudiante estudiante : estudiantes) {
             estudiante.getClasesInscritas().clear();
-            estudiante.getNotificaciones().clear(); // orphanRemoval las borra de la BD
+            estudiante.getNotificaciones().clear(); 
         }
         for (Clase clase : clases) {
-            clase.getEstudiantesInscritos().clear(); // lado inverso: para que cuposRestantes() empiece en cero
+            clase.getEstudiantesInscritos().clear(); 
         }
     }
 }

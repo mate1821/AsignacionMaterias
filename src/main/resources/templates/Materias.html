@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Materias · CRO-NO</title>
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+
+<body>
+    <nav class="nav">
+        <a class="marca" th:href="@{/}">CRO-NO</a>
+        <a th:href="@{/}">Datos</a>
+        <a th:href="@{/estudiantes}">Estudiantes</a>
+        <a th:href="@{/profesores}">Profesores</a>
+        <a th:href="@{/materias}" class="activo">Materias</a>
+        <a th:href="@{/clases}">Clases</a>
+        <a th:href="@{/asignacion}">Asignación</a>
+        <a th:href="@{/horario}">Horario</a>
+        <a th:href="@{/reportes}">Reportes</a>
+    </nav>
+
+    <h1>Materias</h1>
+    <p class="subtitulo">Registro dinámico de materias. Los grupos se crean en <a th:href="@{/clases}">Clases</a>.</p>
+
+    <div class="alerta ok" th:if="${mensaje}" th:text="${mensaje}"></div>
+    <div class="alerta error" th:if="${error}" th:text="${error}"></div>
+
+    <section class="tarjeta">
+        <h2>Nueva materia</h2>
+        <form class="campos" th:action="@{/materias}" method="post">
+            <div>
+                <label for="codigo">Código</label>
+                <input type="number" id="codigo" name="codigo" min="1" placeholder="308" required>
+            </div>
+            <div>
+                <label for="nombre">Nombre</label>
+                <input type="text" id="nombre" name="nombre" required>
+            </div>
+            <div>
+                <label for="creditos">Créditos</label>
+                <input type="number" id="creditos" name="creditos" min="1" required>
+            </div>
+            <div>
+                <button type="submit" class="boton">Registrar</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="tarjeta tabla-contenedor">
+        <table>
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Nombre</th>
+                    <th>Créditos</th>
+                    <th>Grupos (clases)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="m : ${materias}">
+                    <td th:text="${m.codigo}">301</td>
+                    <td th:text="${m.nombre}">Cálculo</td>
+                    <td th:text="${m.creditos}">3</td>
+                    <td>
+                        <span class="etiqueta-chip" th:each="c : ${m.clases}" th:text="${c.id}"
+                            th:title="${c.profesor.nombre + ' · ' + c.horarioTexto}">501</span>
+                        <span class="vacio" th:if="${#lists.isEmpty(m.clases)}">Sin grupos</span>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(materias)}">
+                    <td colspan="4" class="vacio">No hay materias registradas.</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+</body>
+
+</html>

@@ -69,9 +69,7 @@ public class DatosController {
      * Las materias llegan aparte como lista de códigos (checkboxes name="materias").
      */
     @PostMapping("/manual")
-    public String guardarManual(@ModelAttribute("estudiante") Estudiante estudiante, BindingResult binding,
-                                @RequestParam(required = false) List<Long> materias,
-                                Model model, RedirectAttributes redirect) {
+    public String guardarManual(@ModelAttribute("estudiante") Estudiante estudiante, BindingResult binding, @RequestParam(required = false) List<Long> materias,Model model, RedirectAttributes redirect) {
         if (binding.hasErrors()) {
             model.addAttribute("error", "Revise los campos numéricos (créditos, minutos, carga máxima)");
             agregarOpciones(model);

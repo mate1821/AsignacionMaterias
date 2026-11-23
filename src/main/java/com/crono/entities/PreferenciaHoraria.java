@@ -4,7 +4,6 @@ import java.text.Normalizer;
 import java.time.LocalTime;
 import java.util.Locale;
 
-/** Jornada preferida del estudiante. Mañana: 6:00-12:00, Tarde: 12:00-18:00. */
 public enum PreferenciaHoraria {
     MANANA("Mañana", LocalTime.of(6, 0), LocalTime.of(12, 0)),
     TARDE("Tarde", LocalTime.of(12, 0), LocalTime.of(18, 0));

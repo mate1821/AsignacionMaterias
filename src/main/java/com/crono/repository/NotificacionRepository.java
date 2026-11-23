@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface NotificacionRepository extends JpaRepository<Notificacion, Long> {
 
-    List<Notificacion> findByEstudiante_IdOrderByIdAsc(String estudianteId);
+    List<Notificacion> findByEstudiante_Id(String estudianteId);
 }

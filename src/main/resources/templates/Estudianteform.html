@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar estudiante · CRO-NO</title>
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+
+<body>
+    <nav class="nav">
+        <a class="marca" th:href="@{/}">CRO-NO</a>
+        <a th:href="@{/}" class="activo">Datos</a>
+        <a th:href="@{/estudiantes}">Estudiantes</a>
+        <a th:href="@{/profesores}">Profesores</a>
+        <a th:href="@{/materias}">Materias</a>
+        <a th:href="@{/clases}">Clases</a>
+        <a th:href="@{/asignacion}">Asignación</a>
+        <a th:href="@{/horario}">Horario</a>
+        <a th:href="@{/reportes}">Reportes</a>
+    </nav>
+
+    <h1>Registrar estudiante</h1>
+    <p class="subtitulo">Los campos se llenan en el objeto Estudiante por nombre (id, nombre, correo...).</p>
+
+    <div class="alerta ok" th:if="${mensaje}" th:text="${mensaje}"></div>
+    <div class="alerta error" th:if="${error}" th:text="${error}"></div>
+
+    <section class="tarjeta">
+        <form class="campos" th:action="@{/datos/manual}" th:object="${estudiante}" method="post">
+
+            <div>
+                <label for="id">Id <span class="ayuda">(empieza con E)</span></label>
+                <input type="text" th:field="*{id}" placeholder="E1011" required>
+            </div>
+            <div>
+                <label for="nombre">Nombre</label>
+                <input type="text" th:field="*{nombre}" required>
+            </div>
+            <div>
+                <label for="correo">Correo</label>
+                <input type="email" th:field="*{correo}" placeholder="nombre@javeriana.edu.co" required>
+            </div>
+
+            <div>
+                <label for="creditosDisponibles">Créditos disponibles</label>
+                <input type="number" min="0" th:field="*{creditosDisponibles}">
+            </div>
+            <div>
+                <label for="maxClasesPorDia">Máx. clases por día</label>
+                <input type="number" min="0" th:field="*{maxClasesPorDia}">
+            </div>
+            <div>
+                <label for="tiempoDesplazamientoMax">Desplazamiento máx. <span class="ayuda">(min)</span></label>
+                <input type="number" min="0" th:field="*{tiempoDesplazamientoMax}">
+            </div>
+            <div>
+                <label for="maxHuecoMinutos">Hueco máx. <span class="ayuda">(min)</span></label>
+                <input type="number" min="0" th:field="*{maxHuecoMinutos}">
+            </div>
+
+            <div>
+                <label for="preferenciaHoraria">Preferencia horaria</label>
+                <select th:field="*{preferenciaHoraria}">
+                    <option value="">Sin preferencia</option>
+                    <option th:each="p : ${preferencias}" th:value="${p}" th:text="${p.nombre}">Mañana</option>
+                </select>
+            </div>
+
+            <div class="ancho-completo">
+                <label for="preferidos">Preferidos <span class="ayuda">(ids de profesores P… o compañeros E…, separados
+                        por coma)</span></label>
+                <input type="text" id="preferidos" name="preferidos" placeholder="P201, E1002"
+                    th:value="${#strings.setJoin(estudiante.preferidos, ', ')}">
+            </div>
+            <div class="ancho-completo">
+                <label for="noPreferidos">No preferidos <span class="ayuda">(separados por coma)</span></label>
+                <input type="text" id="noPreferidos" name="noPreferidos" placeholder="P205"
+                    th:value="${#strings.setJoin(estudiante.noPreferidos, ', ')}">
+            </div>
+
+            <div class="ancho-completo">
+                <label>Días no disponibles</label>
+                <div class="opciones">
+                    <label th:each="d : ${dias}">
+                        <input type="checkbox" th:field="*{diasNoDisponibles}" th:value="${d}">
+                        <span th:text="${d.nombre}">Lunes</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="ancho-completo">
+                <label>Materias solicitadas</label>
+                <div class="opciones">
+                    <label th:each="m : ${materias}">
+                        <input type="checkbox" name="materias" th:value="${m.codigo}"
+                            th:checked="${#lists.contains(estudiante.materiasSolicitadas.![codigo], m.codigo)}">
+                        <span th:text="${m.codigo + ' · ' + m.nombre + ' (' + m.creditos + ' cr)'}">301 · Cálculo</span>
+                    </label>
+                </div>
+                <p class="vacio" th:if="${#lists.isEmpty(materias)}">No hay materias registradas.</p>
+            </div>
+
+            <div class="ancho-completo">
+                <button type="submit" class="boton">Guardar Datos de Estudiante</button>
+                <a class="boton secundario" th:href="@{/}">Cancelar</a>
+            </div>
+        </form>
+    </section>
+</body>
+
+</html>

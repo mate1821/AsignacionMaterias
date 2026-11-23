@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clases · CRO-NO</title>
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+<body>
+<nav class="nav">
+    <a class="marca" th:href="@{/}">CRO-NO</a>
+    <a th:href="@{/}">Datos</a>
+    <a th:href="@{/estudiantes}">Estudiantes</a>
+    <a th:href="@{/profesores}">Profesores</a>
+    <a th:href="@{/materias}">Materias</a>
+    <a th:href="@{/clases}" class="activo">Clases</a>
+    <a th:href="@{/asignacion}">Asignación</a>
+    <a th:href="@{/horario}">Horario</a>
+    <a th:href="@{/reportes}">Reportes</a>
+</nav>
+
+<h1>Clases</h1>
+<p class="subtitulo">Creación dinámica de clases (grupos) por materia. Bloques de 2 horas entre 6:00 y 18:00.</p>
+
+<div class="alerta ok" th:if="${mensaje}" th:text="${mensaje}"></div>
+<div class="alerta error" th:if="${error}" th:text="${error}"></div>
+
+<section class="tarjeta">
+    <h2>Nueva clase</h2>
+    <form class="campos" th:action="@{/clases}" method="post">
+        <div>
+            <label for="id">Id <span class="ayuda">(vacío = siguiente)</span></label>
+            <input type="number" id="id" name="id" th:placeholder="${siguienteId}">
+        </div>
+        <div>
+            <label for="materiaCodigo">Materia</label>
+            <select id="materiaCodigo" name="materiaCodigo" required>
+                <option th:each="m : ${materias}" th:value="${m.codigo}"
+                        th:text="${m.codigo + ' · ' + m.nombre}">301 · Cálculo</option>
+            </select>
+        </div>
+        <div>
+            <label for="profesorId">Profesor</label>
+            <select id="profesorId" name="profesorId" required>
+                <option th:each="p : ${profesores}" th:value="${p.id}"
+                        th:text="${p.id + ' · ' + p.nombre}">P201 · Nombre</option>
+            </select>
+        </div>
+        <div>
+            <label for="salonId">Salón</label>
+            <select id="salonId" name="salonId" required>
+                <option th:each="s : ${salones}" th:value="${s.id}"
+                        th:text="${s.edificio.nombre + ' - S' + s.id}">Maldonado - S101</option>
+            </select>
+        </div>
+        <div>
+            <label for="cupos">Cupos</label>
+            <input type="number" id="cupos" name="cupos" min="1" required>
+        </div>
+        <div>
+            <label for="dia">Día</label>
+            <select id="dia" name="dia" required>
+                <option th:each="d : ${dias}" th:value="${d}" th:text="${d.nombre}">Lunes</option>
+            </select>
+        </div>
+        <div>
+            <label for="horaInicio">Hora inicio</label>
+            <select id="horaInicio" name="horaInicio" required>
+                <option th:each="h : ${horas}" th:value="${h}" th:text="${h}">06:00</option>
+            </select>
+        </div>
+        <div>
+            <button type="submit" class="boton">Registrar</button>
+        </div>
+    </form>
+</section>
+
+<section class="tarjeta tabla-contenedor">
+    <table>
+        <thead>
+        <tr><th>Id</th><th>Materia</th><th>Profesor</th><th>Horario</th><th>Ubicación</th><th>Cupos</th><th>Inscritos</th></tr>
+        </thead>
+        <tbody>
+        <tr th:each="c : ${clases}">
+            <td th:text="${c.id}">501</td>
+            <td th:text="${c.materia.nombre}">Cálculo</td>
+            <td th:text="${c.profesor.nombre}">Profesor</td>
+            <td th:text="${c.horarioTexto}">Lunes 06:00 - 08:00</td>
+            <td th:text="${'Edificio ' + c.salon.edificio.nombre + ' - S' + c.salon.id}">Edificio Maldonado - S101</td>
+            <td th:text="${c.cupos}">35</td>
+            <td th:text="${c.estudiantesInscritos.size()}">0</td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(clases)}">
+            <td colspan="7" class="vacio">No hay clases registradas.</td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+</body>
+</html>

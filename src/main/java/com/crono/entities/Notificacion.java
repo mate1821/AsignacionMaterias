@@ -13,11 +13,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/**
- * CORRECCIÓN: en el diagrama la notificación era una columna de estudiante_inscripciones.
- * Eso no sirve para los rechazos: si la materia NO se pudo inscribir no existe fila de inscripción
- * donde guardar el mensaje. Ahora es una tabla propia, igual al bloque "notificaciones" del JSON de salida.
- */
+
 @Entity
 @Getter
 @Setter
@@ -32,7 +28,6 @@ public class Notificacion {
     @JoinColumn(name = "estudiante_id")
     private Estudiante estudiante;
 
-    /** Puede ser null si el mensaje es general (no de una materia). */
     @ManyToOne
     @JoinColumn(name = "materia_codigo")
     private Materia materia;

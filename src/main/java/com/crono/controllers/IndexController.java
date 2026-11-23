@@ -8,10 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-/**
- * Pantalla de inicio = sección "Datos" del mockup.
- * Retorna "indice" (sin .html: Thymeleaf lo agrega) y la plantilla se llama indice.html en minúscula.
- */
+
 @Controller
 public class IndexController {
 
@@ -20,8 +17,7 @@ public class IndexController {
     private final MateriaRepository materiaRepository;
     private final ClaseRepository claseRepository;
 
-    public IndexController(EstudianteRepository estudianteRepository, ProfesorRepository profesorRepository,
-                           MateriaRepository materiaRepository, ClaseRepository claseRepository) {
+    public IndexController(EstudianteRepository estudianteRepository, ProfesorRepository profesorRepository,MateriaRepository materiaRepository, ClaseRepository claseRepository) {
         this.estudianteRepository = estudianteRepository;
         this.profesorRepository = profesorRepository;
         this.materiaRepository = materiaRepository;

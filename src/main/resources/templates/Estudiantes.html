@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estudiantes · CRO-NO</title>
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+
+<body>
+    <nav class="nav">
+        <a class="marca" th:href="@{/}">CRO-NO</a>
+        <a th:href="@{/}">Datos</a>
+        <a th:href="@{/estudiantes}" class="activo">Estudiantes</a>
+        <a th:href="@{/profesores}">Profesores</a>
+        <a th:href="@{/materias}">Materias</a>
+        <a th:href="@{/clases}">Clases</a>
+        <a th:href="@{/asignacion}">Asignación</a>
+        <a th:href="@{/horario}">Horario</a>
+        <a th:href="@{/reportes}">Reportes</a>
+    </nav>
+
+    <h1>Estudiantes</h1>
+    <p class="subtitulo" th:text="${#lists.size(estudiantes)} + ' estudiantes cargados'">0 estudiantes cargados</p>
+
+    <div class="alerta ok" th:if="${mensaje}" th:text="${mensaje}"></div>
+    <div class="alerta error" th:if="${error}" th:text="${error}"></div>
+
+    <p><a class="boton secundario" th:href="@{/datos/manual}">+ Registrar estudiante</a></p>
+
+    <section class="tarjeta tabla-contenedor">
+        <table>
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nombre</th>
+                    <th>Correo</th>
+                    <th>Créditos</th>
+                    <th>Jornada</th>
+                    <th>Máx./día</th>
+                    <th>Desplaz.</th>
+                    <th>Materias solicitadas</th>
+                    <th>No disponible</th>
+                    <th>Preferidos</th>
+                    <th>No preferidos</th>
+                    <th>Inscritas</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="e : ${estudiantes}">
+                    <td th:text="${e.id}">E1001</td>
+                    <td th:text="${e.nombre}">Nombre</td>
+                    <td th:text="${e.correo}">correo</td>
+                    <td th:text="${e.creditosDisponibles}">20</td>
+                    <td th:text="${e.preferenciaHoraria?.nombre} ?: '—'">Mañana</td>
+                    <td th:text="${e.maxClasesPorDia} ?: '—'">3</td>
+                    <td th:text="${e.tiempoDesplazamientoMax != null} ? ${e.tiempoDesplazamientoMax} + ' min' : '—'">10
+                        min</td>
+                    <td>
+                        <span class="etiqueta-chip" th:each="m : ${e.materiasSolicitadas}" th:text="${m.codigo}"
+                            th:title="${m.nombre}">301</span>
+                    </td>
+                    <td>
+                        <span class="etiqueta-chip" th:each="d : ${e.diasNoDisponibles}"
+                            th:text="${d.nombre}">Lunes</span>
+                    </td>
+                    <td><span class="etiqueta-chip" th:each="p : ${e.preferidos}" th:text="${p}">P201</span></td>
+                    <td><span class="etiqueta-chip" th:each="p : ${e.noPreferidos}" th:text="${p}">P202</span></td>
+                    <td th:text="${e.clasesInscritas.size()}">0</td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(estudiantes)}">
+                    <td colspan="12" class="vacio">No hay estudiantes. Cargue un JSON o regístrelos a mano.</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+</body>
+
+</html>

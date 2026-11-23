@@ -42,7 +42,6 @@ public class AsignacionController {
             redirect.addFlashAttribute("mensaje", asignacionService.ejecutar());
             return "redirect:/reportes";
         } catch (RuntimeException e) {
-            // Si el algoritmo falla, la transacción se revierte y se muestra el error
             redirect.addFlashAttribute("error", "Error en el algoritmo: " + e.getMessage());
             return "redirect:/asignacion";
         }
